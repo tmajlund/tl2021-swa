@@ -1,5 +1,31 @@
 {
     "navigationFallback": {
         "rewrite": "/index.html"
-    }
+    },
+    "routes": [
+        {
+            "route": "/api/*",
+            "allowedRoles": ["authenticated"]
+        },
+        {
+            "route": "/test",
+            "allowedRoles": ["authenticated"]
+        },
+        {
+            "route": "/login",
+            "redirect": "/.auth/login/github"
+        },
+        {
+            "route": "/logout",
+            "redirect": "/.auth/logout"
+        },
+        {
+            "route": "/.auth/login/twitter",
+            "statusCode": 404
+        },
+        {
+            "route": "/.auth/login/aad",
+            "statusCode": 404
+        }
+    ]
 }
