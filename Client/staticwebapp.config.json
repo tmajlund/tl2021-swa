@@ -8,10 +8,6 @@
             "allowedRoles": ["authenticated"]
         },
         {
-            "route": "/test",
-            "allowedRoles": ["authenticated"]
-        },
-        {
             "route": "/login",
             "redirect": "/.auth/login/github"
         },
