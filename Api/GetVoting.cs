@@ -7,30 +7,43 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Microsoft.Azure.Cosmos.Table;
+using System.Linq;
+using BlazorApp.Shared;
 
 namespace BlazorApp.VotingApi
 {
+    public class TableData : TableEntity
+    {
+        public string Vote { get; set; }
+    }
     public static class GetVoting
     {
         [FunctionName("GetVoting")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
-            [Table("Votings")]
+            [Table("Votings", "1", Connection = "VotingsDBConnection")] CloudTable table,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
+            var query = table.CreateQuery<TableData>();
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            var votes = (await table.ExecuteQuerySegmentedAsync(query, null)).ToList();
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            if (votes.Any())
+            {
+                var response = new ApiResponse
+                {
+                    NumberOfVoters = votes.Count(),
+                    NumberOfYes = votes.Where(v => v.Vote == "yes").Count(),
+                    NumberOfNo = votes.Where(v => v.Vote == "no").Count()
+                };
+                
+                return new OkObjectResult(response);
+            }
 
-            return new OkObjectResult(responseMessage);
+            return new OkResult();
         }
     }
 }
