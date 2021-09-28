@@ -4,17 +4,48 @@
 
 <h1>Start Page</h1>
 
-<button @onclick="Test">Test post-function</button>
+<button @onclick="VoteYes">Vote Yes</button>
+
+<button @onclick="VoteNo">Vote No</button>
+
+@if (apiResponse is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <p>Number of voters: @apiResponse.NumberOfVoters</p>
+    <p>Number of yes: @apiResponse.NumberOfYes</p>
+    <p>Number of no: @apiResponse.NumberOfNo</p>
+}
 
 @code{
+    private ApiResponse apiResponse;
+
+    protected override async Task OnInitializedAsync()
+    {
+        apiResponse = await HttpClient.GetFromJsonAsync<ApiResponse>("api/GetVoting");      
+    }
     
-    private async Task Test()
+    private async Task VoteYes()
     {
         var vote = new NewVote
         {
             VoteId = "1",
             Timestamp = DateTimeOffset.UtcNow,
             Vote = "yes"
+        };
+
+        await HttpClient.PostAsJsonAsync("api/PostVoting", vote); 
+    }
+
+        private async Task VoteNo()
+    {
+        var vote = new NewVote
+        {
+            VoteId = "1",
+            Timestamp = DateTimeOffset.UtcNow,
+            Vote = "no"
         };
 
         await HttpClient.PostAsJsonAsync("api/PostVoting", vote); 
