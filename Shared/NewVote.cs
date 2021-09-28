@@ -6,6 +6,6 @@ namespace BlazorApp.Shared
     {
         public string VoteId { get; set; }
         public DateTimeOffset Timestamp { get; set; }
-        public string Answer { get; set; }
+        public string Vote { get; set; }
     }
 }
