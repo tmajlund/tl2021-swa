@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Microsoft.Azure.Cosmos.Table;
 using System.Linq;
 using BlazorApp.Shared;
+using System.Security.Claims;
 
 namespace BlazorApp.VotingApi
 {
@@ -23,9 +24,16 @@ namespace BlazorApp.VotingApi
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = null)] HttpRequest req,
             [Table("Votings", "1", Connection = "VotingsDBConnection")] CloudTable table,
-            ILogger log)
+            ILogger log,
+            ClaimsPrincipal principal)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
+
+            if (principal == null && !principal.Identity.IsAuthenticated)
+            {
+                log.LogWarning("Request was not authenticated");
+                return new UnauthorizedResult();
+            }
 
             var query = table.CreateQuery<TableData>();
 

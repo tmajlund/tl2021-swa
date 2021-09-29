@@ -2,22 +2,42 @@
 @using BlazorApp.Shared
 @inject HttpClient HttpClient
 
-<h1>Start Page</h1>
+<div id="start-page-div">
+    <AuthorizeView>
+        <Authorized>
+            @if (apiResponse is null)
+            {
+                <p>Loading...</p>
+            }
+            else
+            {
+                <div class="card">
+                    <div class="card-header">
+                        Current poll
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Is Blazor making JavaScript obsolete?!</h5>
+                        <p class="card-text">Let us know where you stand by voting!</p>
+                        <p class="card-text">Voters so far:  @apiResponse.NumberOfVoters</p>
+                        <a href="vote" class="btn btn-primary">Vote</a>
+                    </div>
+                </div>  
+            }
+        </Authorized>
+        <NotAuthorized>
+            <div class="card">
+                <div class="card-header">
+                    Welcome to the Voting App!
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Log in to see the latest poll and vote.</p>
+                    <a href="login" class="btn btn-primary">Log in with GitHub</a>
+                </div>
+            </div>             
+        </NotAuthorized>
+    </AuthorizeView>
+</div>
 
-<button @onclick="VoteYes">Vote Yes</button>
-
-<button @onclick="VoteNo">Vote No</button>
-
-@if (apiResponse is null)
-{
-    <p>Loading...</p>
-}
-else
-{
-    <p>Number of voters: @apiResponse.NumberOfVoters</p>
-    <p>Number of yes: @apiResponse.NumberOfYes</p>
-    <p>Number of no: @apiResponse.NumberOfNo</p>
-}
 
 @code{
     private ApiResponse apiResponse;

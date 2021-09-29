@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using BlazorApp.Shared;
+using System.Security.Claims;
 
 namespace BlazorApp.VotingApi
 {
@@ -17,7 +18,8 @@ namespace BlazorApp.VotingApi
         [return: Queue("votings", Connection = "VotingsDBConnection")]
         public static async Task<NewVote> Run(
             [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
-            ILogger log)
+            ILogger log,
+            ClaimsPrincipal principal)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
