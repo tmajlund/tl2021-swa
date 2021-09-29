@@ -17,14 +17,16 @@ else
     <p>Number of yes: @apiResponse.NumberOfYes</p>
     <p>Number of no: @apiResponse.NumberOfNo</p>
 
-    <p>Yes:</p>@for (int i = 0; i < apiResponse.NumberOfYes; i++)
+    <p>Yes: @for (int i = 0; i < apiResponse.NumberOfYes; i++)
     {
         <span>#</span>
     }
-    <p>No :</p>@for (int i = 0; i < apiResponse.NumberOfNo; i++)
+    </p>
+    <p>No : @for (int i = 0; i < apiResponse.NumberOfNo; i++)
     {
         <span>#</span>
     }
+    </p>
 }
 
 @code{
