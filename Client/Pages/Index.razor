@@ -24,7 +24,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        apiResponse = await HttpClient.GetFromJsonAsync<ApiResponse>("api/GetVoting");      
+        apiResponse = await HttpClient.GetFromJsonAsync<ApiResponse>("api/GetVoting");
     }
     
     private async Task VoteYes()
