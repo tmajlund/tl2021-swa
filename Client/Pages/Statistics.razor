@@ -1,0 +1,73 @@
+@page "/statistics"
+@using BlazorApp.Shared
+@using System.Timers
+@using Microsoft.AspNetCore.Authorization
+@inject HttpClient HttpClient
+@attribute [Authorize]
+
+<h1>Statistics</h1>
+
+@if (autoRefreshOn)
+{
+    <button @onclick="StopRefresh">Stop auto refresh</button>
+}
+else
+{
+    <button @onclick="AutoRefresh">Start auto refresh</button>
+}
+
+
+@if (apiResponse is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <p>Number of voters: @apiResponse.NumberOfVoters</p>
+    <p>Number of yes: @apiResponse.NumberOfYes</p>
+    <p>Number of no: @apiResponse.NumberOfNo</p>
+
+    <p>Yes:</p>@for (int i = 0; i < apiResponse.NumberOfYes; i++)
+    {
+        <span>#</span>
+    }
+    <p>No :</p>@for (int i = 0; i < apiResponse.NumberOfNo; i++)
+    {
+        <span>#</span>
+    }
+}
+
+@code{
+    private ApiResponse apiResponse;
+    private bool autoRefreshOn = false;
+    private Timer timer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        apiResponse = await HttpClient.GetFromJsonAsync<ApiResponse>("api/GetVoting");
+    }
+
+    private void AutoRefresh()
+    {
+        autoRefreshOn = true;
+        timer = new Timer(2000);
+        timer.AutoReset = true;
+        timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+        timer.Start();
+    }
+
+    private void StopRefresh()
+    {
+        timer.AutoReset = false;
+        autoRefreshOn = false;
+    }
+    
+    private async void OnTimedEvent(Object source, ElapsedEventArgs e)
+    {
+        apiResponse = await HttpClient.GetFromJsonAsync<ApiResponse>("api/GetVoting");
+        await InvokeAsync(() => 
+        {
+            StateHasChanged();
+        });
+    }
+}
