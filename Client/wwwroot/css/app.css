@@ -75,10 +75,25 @@
     max-width: 400px;
     margin: 0 auto;
     margin-top: 100px;
+    text-align: center;
+}
+
+#statistics-page-div{
+    width: 340px;
+    margin: auto;
+    margin-top: 100px;
 }
 
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+body{
+    background-image: url(https://d585tldpucybw.cloudfront.net/sfimages/default-source/default-album/lp-blazor-powerpage-newmascot.png?sfvrsn=ff1969d1_0);
+}
+
+.card{
+    background-color: rgba(255,255,255,0.77)
 }
 
 a, .btn-link {
