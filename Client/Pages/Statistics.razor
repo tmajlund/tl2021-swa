@@ -16,23 +16,13 @@ else
     <p>Number of voters: @apiResponse.NumberOfVoters</p>
     <p>Number of yes: @apiResponse.NumberOfYes</p>
     <p>Number of no: @apiResponse.NumberOfNo</p>
-
-    <p>Yes @((int)Math.Round((double)(100 * apiResponse.NumberOfYes) / apiResponse.NumberOfVoters))%: @for (int i = 0; i < apiResponse.NumberOfYes; i++)
-    {
-        <span>#</span>
-    }
-    </p>
-    <p>No @((int)Math.Round((double)(100 * apiResponse.NumberOfNo) / apiResponse.NumberOfVoters))%: @for (int i = 0; i < apiResponse.NumberOfNo; i++)
-    {
-        <span>#</span>
-    }
-    </p>
+    
     <br>
     <br>
 
     <div style="width: 300px">
     <div class="semi-donut"
-            style="--percentage : @(percentageYes)%; --fill: #039BE5 ;">
+            style="--percentage : @(percentageYes); --fill: #039BE5 ;">
         Blazor
     </div>
     <div>
@@ -44,7 +34,7 @@ else
 
 @code{
     private ApiResponse apiResponse;
-    private int percentageYes;
+    private int percentageYes = 0;
     private Timer timer;
 
     protected override void OnInitialized()
@@ -58,7 +48,11 @@ else
     private async void OnTimedEvent(Object source, ElapsedEventArgs e)
     {
         apiResponse = await HttpClient.GetFromJsonAsync<ApiResponse>("api/GetVoting");
-        percentageYes = (int)Math.Round((double)(100 * apiResponse.NumberOfYes) / apiResponse.NumberOfVoters);
+        if (apiResponse.NumberOfVoters > 0)
+        {
+            percentageYes = (int)Math.Round((double)(100 * apiResponse.NumberOfYes) / apiResponse.NumberOfVoters);
+        }
+
         await InvokeAsync(() => 
         {
             StateHasChanged();
