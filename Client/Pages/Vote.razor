@@ -1,0 +1,81 @@
+@page "/vote"
+@inject HttpClient HttpClient
+@inject AuthenticationStateProvider AuthState
+@inject Blazored.SessionStorage.ISyncSessionStorageService SessionStorage
+@attribute [Authorize]
+
+
+<div id="vote-page-div">
+    @if (!haveVoted)
+    {
+        <div class="card">
+            <div class="card-header">
+
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Is Blazor making JavaScript obsolete?!</h5>
+                <button @onclick="VoteYes" class="btn btn-success">Oh for sure</button>
+                <button @onclick="VoteNo" class="btn btn-danger">Hell no</button>
+            </div>
+        </div>
+    }
+    @if (haveVoted)
+    {
+        <div class="card">
+            <div class="card-header">
+
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Your vote has been registered</h5>
+                <a href="statistics" class="btn btn-primary">Statistics</a>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private bool haveVoted;
+
+    protected override void OnInitialized()
+    {
+        var sessionStorageItem = SessionStorage.GetItem<string>("haveVoted");
+        if (sessionStorageItem == "true")
+        {
+            haveVoted = true;
+        }        
+    }
+    private async Task VoteYes()
+    {
+        haveVoted = true;
+
+        var vote = new NewVote
+        {
+            VoteId = "1",
+            Timestamp = DateTimeOffset.UtcNow,
+            Vote = "yes"
+        };
+
+        await HttpClient.PostAsJsonAsync("api/PostVoting", vote);
+        SetSessionStorage();
+    }
+
+    private async Task VoteNo()
+    {
+        haveVoted = true;
+
+        var vote = new NewVote
+        {
+            VoteId = "1",
+            Timestamp = DateTimeOffset.UtcNow,
+            Vote = "no"
+        };
+
+        await HttpClient.PostAsJsonAsync("api/PostVoting", vote);
+        SetSessionStorage();
+    }
+
+    private void SetSessionStorage()
+    {
+        SessionStorage.SetItem("haveVoted", "true");
+    }
+}

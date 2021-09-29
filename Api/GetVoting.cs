@@ -50,8 +50,19 @@ namespace BlazorApp.VotingApi
                 
                 return new OkObjectResult(response);
             }
+            else
+            {
+                var response = new ApiResponse
+                {
+                    NumberOfVoters = 0,
+                    NumberOfYes = 0,
+                    NumberOfNo = 0
+                };
 
-            return new OkResult();
+                return new OkObjectResult(response);
+            }
+
+            
         }
     }
 }
