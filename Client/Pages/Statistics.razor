@@ -49,7 +49,7 @@
 
     protected override void OnInitialized()
     {
-        timer = new Timer(2000);
+        timer = new Timer(1500);
         timer.AutoReset = true;
         timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
         timer.Start();
@@ -71,7 +71,8 @@
             {
                 emoji = "far fa-tired";
             }
-            else
+
+            if (Math.Abs(percentageYes - percentageNo) <= 10)
             {
                 emoji = "far fa-surprise";
             }
