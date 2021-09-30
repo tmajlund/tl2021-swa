@@ -5,13 +5,13 @@
 </div>
 
 <div class="main">
-    <div class="top-row px-4">
-        <AuthorizeView>
-            <Authorized>
+    <AuthorizeView>
+        <Authorized>
+            <div class="top-row px-4" style="background-color: rgba(255,255,255,0.5)">
                 Hello, @context.User.Identity.Name!
-            </Authorized>
-        </AuthorizeView>
-    </div>
+            </div>
+        </Authorized>
+    </AuthorizeView>
 
     <div class="content px-4">
         @Body

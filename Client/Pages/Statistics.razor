@@ -5,36 +5,50 @@
 @inject HttpClient HttpClient
 @attribute [Authorize]
 
-<h1>Statistics</h1>
 
-@if (apiResponse is null)
-{
-    <p>Loading...</p>
-}
-else
-{
-    <p>Number of voters: @apiResponse.NumberOfVoters</p>
-    <p>Number of yes: @apiResponse.NumberOfYes</p>
-    <p>Number of no: @apiResponse.NumberOfNo</p>
+<div id="statistics-page-div">
+    <div class="card">
+        <div class="card-header">
+            <h1 style="text-align: center;">Statistics</h1>
+        </div>
+        <div class="card-body">
+            @if (apiResponse is null)
+            {
+                <p>Loading...</p>
+            }
+            else
+            {
+                <p>Number of voters: @apiResponse.NumberOfVoters</p>
+                <p>Number of yes: @apiResponse.NumberOfYes</p>
+                <p>Number of no: @apiResponse.NumberOfNo</p>
+                <br>
 
-    <p>Yes:</p>@for (int i = 0; i < apiResponse.NumberOfYes; i++)
-    {
-        <span>#</span>
-    }
-    <p>No :</p>@for (int i = 0; i < apiResponse.NumberOfNo; i++)
-    {
-        <span>#</span>
-    }
-}
+                <div style="width: 300px">
+                    <div class="semi-donut"
+                            style="--percentage : @(percentageYes); --fill: #6b5b95 ;">
+                        Blazor
+                    </div>
+                    <br>
+                    <div>
+                        <p class="align-left">@(percentageYes)% Yes</p>
+                        <p class="align-right">@(percentageNo)% No</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
 
 @code{
     private ApiResponse apiResponse;
-    private bool autoRefreshOn = false;
+    private int percentageYes = 0;
+    private int percentageNo = 0;
     private Timer timer;
 
     protected override void OnInitialized()
     {
-        autoRefreshOn = true;
         timer = new Timer(2000);
         timer.AutoReset = true;
         timer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
@@ -44,6 +58,12 @@ else
     private async void OnTimedEvent(Object source, ElapsedEventArgs e)
     {
         apiResponse = await HttpClient.GetFromJsonAsync<ApiResponse>("api/GetVoting");
+        if (apiResponse.NumberOfVoters > 0)
+        {
+            percentageYes = (int)Math.Round((double)(100 * apiResponse.NumberOfYes) / apiResponse.NumberOfVoters);
+            percentageNo = (int)Math.Round((double)(100 * apiResponse.NumberOfNo) / apiResponse.NumberOfVoters);
+        }
+
         await InvokeAsync(() => 
         {
             StateHasChanged();
