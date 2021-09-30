@@ -7,9 +7,9 @@
 
 
 <div id="statistics-page-div">
-    <div class="card">
+    <div class="card"  style="align-items:center">
         <div class="card-header">
-            <h1 style="text-align: center;">Statistics</h1>
+            <h5 style="text-align: center;">Is Blazor making JavaScript obsolete?!</h5>
         </div>
         <div class="card-body">
             @if (apiResponse is null)
@@ -18,15 +18,13 @@
             }
             else
             {
-                <p>Number of voters: @apiResponse.NumberOfVoters</p>
-                <p>Number of yes: @apiResponse.NumberOfYes</p>
-                <p>Number of no: @apiResponse.NumberOfNo</p>
-                <br>
-
+                <p>Participants: @apiResponse.NumberOfVoters</p>
+                <p>Yes: @apiResponse.NumberOfYes votes</p>
+                <p>No: @apiResponse.NumberOfNo votes</p>
                 <div style="width: 300px">
                     <div class="semi-donut"
                             style="--percentage : @(percentageYes); --fill: #532f91 ;">
-                        Blazor<span class="fa fa-@(emoji)"></span>
+                        <span class="@(emoji) fa-3x"></span>
                     </div>
                     <br>
                     <div>
@@ -67,15 +65,15 @@
 
             if(apiResponse.NumberOfYes > apiResponse.NumberOfNo)
             {
-                emoji = "grin-hearts";
+                emoji = "far fa-grin-hearts";
             }
             else if(apiResponse.NumberOfNo > apiResponse.NumberOfYes)
             {
-                emoji = "tired";
+                emoji = "far fa-tired";
             }
             else
             {
-                emoji = "meh";
+                emoji = "far fa-surprise";
             }
         }
 
