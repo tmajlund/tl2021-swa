@@ -25,8 +25,8 @@
 
                 <div style="width: 300px">
                     <div class="semi-donut"
-                            style="--percentage : @(percentageYes); --fill: #6b5b95 ;">
-                        Blazor
+                            style="--percentage : @(percentageYes); --fill: #532f91 ;">
+                        Blazor<span class="fa fa-@(emoji)"></span>
                     </div>
                     <br>
                     <div>
@@ -47,6 +47,8 @@
     private int percentageNo = 0;
     private Timer timer;
 
+    private string emoji; 
+
     protected override void OnInitialized()
     {
         timer = new Timer(2000);
@@ -62,6 +64,19 @@
         {
             percentageYes = (int)Math.Round((double)(100 * apiResponse.NumberOfYes) / apiResponse.NumberOfVoters);
             percentageNo = (int)Math.Round((double)(100 * apiResponse.NumberOfNo) / apiResponse.NumberOfVoters);
+
+            if(apiResponse.NumberOfYes > apiResponse.NumberOfNo)
+            {
+                emoji = "grin-hearts";
+            }
+            else if(apiResponse.NumberOfNo > apiResponse.NumberOfYes)
+            {
+                emoji = "tired";
+            }
+            else
+            {
+                emoji = "meh";
+            }
         }
 
         await InvokeAsync(() => 

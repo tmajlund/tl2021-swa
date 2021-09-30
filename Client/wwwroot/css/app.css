@@ -64,13 +64,6 @@
     }
 }
 
-
-
-
-
-
-
-
 #vote-page-div, #start-page-div{
     max-width: 400px;
     margin: 0 auto;
@@ -139,7 +132,8 @@ app {
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    background-image: linear-gradient(180deg, #532f91 0%, #440087 70%);
+    opacity: 0.9;
 }
 
     .sidebar .top-row {
