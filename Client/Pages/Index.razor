@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using BlazorApp.Shared
 @inject HttpClient HttpClient
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <div id="start-page-div">
     <AuthorizeView>
@@ -46,7 +47,13 @@
 
     protected override async Task OnInitializedAsync()
     {
-        apiResponse = await HttpClient.GetFromJsonAsync<ApiResponse>("api/GetVoting");
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            await GetVotings();
+        }
     }
 
     private async Task VoteYes()
@@ -71,5 +78,10 @@
         };
 
         await HttpClient.PostAsJsonAsync("api/PostVoting", vote);
+    }
+
+    private async Task GetVotings()
+    {
+        apiResponse = await HttpClient.GetFromJsonAsync<ApiResponse>("api/GetVoting");
     }
 }
