@@ -6,23 +6,15 @@
 <div id="start-page-div">
     <AuthorizeView>
         <Authorized>
-            @if (apiResponse is null)
-            {
-                <p>Loading...</p>
-            }
-            else
-            {
-                <div class="card">
-                    <div class="card-header">
-                        <h5>Is Blazor making JavaScript obsolete?!</h5>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-text">Let us know where you stand by voting!</p>
-                        <p class="card-text">Voters so far: @apiResponse.NumberOfVoters</p>
-                        <a href="vote" class="btn btn-primary">Vote</a>
-                    </div>
+            <div class="card">
+                <div class="card-header">
+                    <h5>Is Blazor making JavaScript obsolete?!</h5>
                 </div>
-            }
+                <div class="card-body">
+                    <p class="card-text">Let us know where you stand by voting!</p>
+                    <a href="vote" class="btn btn-primary">Vote</a>
+                </div>
+            </div>          
         </Authorized>
         <NotAuthorized>
             <div class="card">
@@ -43,19 +35,6 @@
 
 
 @code {
-    private ApiResponse apiResponse;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-
-        if (user.Identity.IsAuthenticated)
-        {
-            await GetVotings();
-        }
-    }
-
     private async Task VoteYes()
     {
         var vote = new NewVote
@@ -78,10 +57,5 @@
         };
 
         await HttpClient.PostAsJsonAsync("api/PostVoting", vote);
-    }
-
-    private async Task GetVotings()
-    {
-        apiResponse = await HttpClient.GetFromJsonAsync<ApiResponse>("api/GetVoting");
     }
 }
